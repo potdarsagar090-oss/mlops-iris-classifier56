@@ -22,6 +22,7 @@ n_estimators=n_estimators, max_depth=max_depth, random_state=42
 
 def evaluate_model(model, X_test, y_test):
     predictions = model.predict(X_test)
+    print(classification_report(y_test, predctions))
     acc = accuracy_score(y_test, predictions)
     report = classification_report(y_test, predictions)
     return acc, report
