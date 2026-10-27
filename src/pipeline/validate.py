@@ -10,12 +10,14 @@ import sys
 
 import pandas as pd
 
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
 
 logger = logging.getLogger("validate")
+
 
 EXPECTED_COLUMNS = {
     "sepal length (cm)",
@@ -29,11 +31,13 @@ EXPECTED_COLUMNS = {
     "petal_length_bin",
 }
 
+
 VALID_SPECIES = {
     "setosa",
     "versicolor",
     "virginica"
 }
+
 
 RANGE_CHECKS = {
     "sepal length (cm)": (3.0, 9.0),
@@ -52,17 +56,18 @@ def validate(input_path: str) -> pd.DataFrame:
 
     errors = []
 
-    # Check required columns
+    # Check required columns first
     missing_cols = EXPECTED_COLUMNS - set(df.columns)
 
     if missing_cols:
-        errors.append(
+        raise DataValidationError(
             f"Missing expected columns: {missing_cols}"
         )
 
     # Check null values
     if df.isnull().any().any():
         null_cols = df.columns[df.isnull().any()].tolist()
+
         errors.append(
             f"Unexpected null values in columns: {null_cols}"
         )
@@ -77,6 +82,7 @@ def validate(input_path: str) -> pd.DataFrame:
 
     # Check numeric ranges
     for col, (low, high) in RANGE_CHECKS.items():
+
         out_of_range = df[
             (df[col] < low) | (df[col] > high)
         ]
@@ -89,6 +95,7 @@ def validate(input_path: str) -> pd.DataFrame:
 
     # Stop pipeline if validation fails
     if errors:
+
         for error in errors:
             logger.error(error)
 
@@ -106,6 +113,7 @@ def validate(input_path: str) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
