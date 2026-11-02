@@ -5,8 +5,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import accuracy_score
 
 
-MIN_ACCEPTABLE_ACCURACY = 0.90
-
+MIN_ACCEPTABLE_ACCURACY = 0.999
 
 def load_model_data():
     df = pd.read_csv("data/processed/iris_features.csv")
